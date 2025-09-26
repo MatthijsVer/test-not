@@ -52,16 +52,16 @@ const Cover = ({ preview, url }: CoverProps) => {
             className="text-muted-foreground text-xs"
             onClick={() => coverImage.onReplace(url)}
           >
-            <ImageIcon />
+            <ImageIcon className="size-4 mr-1.5" />
             <span>Change cover</span>
           </Button>
           <Button
             size={"sm"}
             variant={"outline"}
-            className="text-muted-foreground text-xs"
+            className="text-muted-foreground flex items-center text-xs"
             onClick={onRemove}
           >
-            <X />
+            <X className="size-4 mr-0.5" />
             <span>remove</span>
           </Button>
         </div>

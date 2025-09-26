@@ -1,5 +1,5 @@
 import { useTheme } from "next-themes";
-import React from "react";
+import React, { useEffect, useRef } from "react";
 import { BlockNoteView, useBlockNote } from "@blocknote/react";
 import { BlockNoteEditor, PartialBlock } from "@blocknote/core";
 import { useEdgeStore } from "@/lib/edgestore";
@@ -20,16 +20,29 @@ const Editor = ({ onChange, editable, initialContent }: EditorProps) => {
     return res.url;
   };
 
+  const isInitialized = useRef(false);
+
   const editor: BlockNoteEditor = useBlockNote({
     editable,
-    initialContent: initialContent
-      ? (JSON.parse(initialContent) as PartialBlock[])
-      : undefined,
     onEditorContentChange: (editor) => {
       onChange(JSON.stringify(editor.topLevelBlocks, null, 2));
     },
     uploadFile: handleUpload,
   });
+
+  useEffect(() => {
+    if (initialContent && editor && !isInitialized.current) {
+      try {
+        const parsed = JSON.parse(initialContent);
+        if (Array.isArray(parsed)) {
+          editor.replaceBlocks(editor.topLevelBlocks, parsed);
+          isInitialized.current = true;
+        }
+      } catch (error) {
+        console.error("Failed to load initial content:", error);
+      }
+    }
+  }, [initialContent, editor]);
 
   return (
     <BlockNoteView
