@@ -3,6 +3,7 @@ import React, { useEffect, useRef } from "react";
 import { BlockNoteView, useBlockNote } from "@blocknote/react";
 import { BlockNoteEditor, PartialBlock } from "@blocknote/core";
 import { useEdgeStore } from "@/lib/edgestore";
+import { TabsBlockConfig, insertTabsSlashItem } from "../blocks/tabs-block-config";
 
 interface EditorProps {
   onChange: (value: string) => void;
@@ -24,6 +25,12 @@ const Editor = ({ onChange, editable, initialContent }: EditorProps) => {
 
   const editor: BlockNoteEditor = useBlockNote({
     editable,
+    blockSpecs: {
+      tabs: TabsBlockConfig,
+    },
+    slashCommands: [
+      insertTabsSlashItem,
+    ],
     onEditorContentChange: (editor) => {
       onChange(JSON.stringify(editor.topLevelBlocks, null, 2));
     },
